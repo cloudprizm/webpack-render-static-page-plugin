@@ -64,11 +64,19 @@ export const renderHTML = ({html, env, helmet}) =>
    </html>
   `
 
+export const SomeNestedPage: React.SFC<StaticRenderProps> = props =>
+  <Helmet>
+    <title>Hello World</title>
+    {cdnLibs.concat(lazyJSLibs).map(makeScriptTag)}
+    {css.map(makeCSSTag)}
+    <body className="root" />
+  </Helmet>
+
 export const makeIndex: StaticComponentRenderer =
   (compilationData) => {
     const context = { ...helmetContext }
     const App = <HelmetProvider context={context}>
-      <Page
+      <SomeNestedPage
         webpackStats={compilationData.webpackStats}
         env={compilationData.env}
       />
