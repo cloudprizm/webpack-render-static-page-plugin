@@ -1,0 +1,57 @@
+{
+  "name": "@hungry/webpack-render-static-page-plugin",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "license": "TBD",
+  "sideEffects": false,
+  "babel": {
+    "presets": [
+      "@hungry/cli"
+    ]
+  },
+  "private": false,
+  "scripts": {
+    "build:code": "babel src/** -d dist --extensions '.ts','.tsx'",
+    "prepublish": "yarn test && yarn build",
+    "test": "jest",
+    "build:declarations": "tsc --build tsconfig.json",
+    "build": "concurrently 'yarn build:declarations' 'yarn build:code'",
+    "watch": "concurrently 'yarn build:declarations --watch' 'yarn build:code --watch'"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "babel-jest"
+    },
+    "testRegex": "/__tests__/.*\\.test\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "dependencies": {
+    "react-dom": "^16.5.2",
+    "react": "^16.5.2",
+    "@sindresorhus/is": "^0.12.0",
+    "jsdom": "^12.2.0",
+    "ramda": "^0.25.0"
+  },
+  "peerDependencies": {
+    "webpack": "^4.22.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@hungry/babel-preset-cli": "^0.1.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "concurrently": "^4.0.1",
+    "jest": "^23.6.0",
+    "typescript": "^3.1.3"
+  }
+}
