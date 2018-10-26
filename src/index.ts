@@ -14,12 +14,17 @@ const persistedStatsKeys = [
   'entrypoints',
 ]
 
-export interface StaticRenderProps {
+type Env = NodeJS.ProcessEnv
+export type EntryType = Entry
+export type EnvVars = Env
+export type EntryRef = string
+
+export interface StaticRenderProps<K> {
   webpackStats: PersistedStats
-  env: NodeJS.ProcessEnv
+  data?: K
 }
 
-export type StaticComponentRenderer = (data: StaticRenderProps) => Promise<string>
+export type StaticComponentRenderer<K> = (data: StaticRenderProps<K>) => Promise<string>
 
 export type Compilation = compilationNS.Compilation
 export type JSONWebpackStats = Stats.ToJsonOptionsObject
@@ -38,28 +43,21 @@ export type PersistedStats = Pick<
 export const mkTinyPersistedStats = (stats: Stats): PersistedStats =>
   pick(persistedStatsKeys, stats.toJson('normal')) as PersistedStats
 
-export type EntryType = Entry
-export type EnvVars = StaticRenderProps['env']
-export type EntryRef = string
-
-export interface ComponentRenderPluginOptions {
+export interface ComponentRenderPluginOptions<K> {
   entry: EntryRef
-  renderer: StaticComponentRenderer
-  data: EnvVars
+  data?: K
   filename: string
   component: string
 }
 
-export class ComponentRenderPlugin implements ComponentRenderPluginOptions, Plugin {
-  public renderer: StaticComponentRenderer
-  public data: EnvVars
+export class ComponentRenderPlugin<K> implements ComponentRenderPluginOptions<K>, Plugin {
+  public data?: K
   public entry: EntryRef
   public filename: string
   public component: string
 
-  constructor(options: ComponentRenderPluginOptions) {
+  constructor(options: ComponentRenderPluginOptions<K>) {
     this.entry = options.entry
-    this.renderer = options.renderer
     this.data = options.data
     this.filename = options.filename || 'index.static.html'
     this.component = options.component || 'default'
@@ -98,14 +96,14 @@ export class ComponentRenderPlugin implements ComponentRenderPluginOptions, Plug
 
     const evaluatedSource = {
       [this.component]: null,
-      ...global,
+      ...global, // check if necessary
     }
 
     runInNewContext(staticEntry.source(), evaluatedSource)
 
-    const makeComponent = (evaluatedSource[this.component] as unknown) as StaticComponentRenderer
+    const makeComponent = (evaluatedSource[this.component] as unknown) as StaticComponentRenderer<K>
     if (!makeComponent) return Promise.reject(new Error('there is no component to render'))
-    return makeComponent({ webpackStats: tinyStats, env: this.data })
+    return makeComponent({ webpackStats: tinyStats, data: this.data })
   }
 
   public apply(compiler: Compiler) {
