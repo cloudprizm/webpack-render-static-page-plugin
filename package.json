@@ -49,6 +49,6 @@
     "babel-jest": "^23.6.0",
     "concurrently": "^4.0.1",
     "jest": "^23.6.0",
-    "typescript": "next"
+    "typescript": "^3.2.1"
   }
 }
