@@ -38,7 +38,7 @@ export type PersistedStats = Pick<
   | 'assetsByChunkName'
   | 'entrypoints'
   | 'outputPath'
-  >
+>
 
 export const mkTinyPersistedStats = (stats: Stats): PersistedStats =>
   pick(persistedStatsKeys, stats.toJson('normal')) as PersistedStats
@@ -96,9 +96,9 @@ export class ComponentRenderPlugin<K> implements ComponentRenderPluginOptions<K>
 
     const evaluatedSource = {
       [this.component]: null,
+      Object,
       ...global, // check if necessary
     }
-
     runInNewContext(staticEntry.source(), evaluatedSource)
 
     const makeComponent = (evaluatedSource[this.component] as unknown) as StaticComponentRenderer<K>
