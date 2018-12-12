@@ -1,3 +1,4 @@
+import { ComponentType } from 'react'
 import { compilation as compilationNS, Plugin, Stats, Compiler, Entry } from 'webpack'
 import is from '@sindresorhus/is'
 import { last, pick } from 'ramda'
@@ -24,7 +25,8 @@ export interface StaticRenderProps<K> {
   data?: K
 }
 
-export type StaticComponentRenderer<K> = (data: StaticRenderProps<K>) => Promise<string>
+export type StaticComponentRenderer<K> =
+  (data: StaticRenderProps<K>, InnerComponent?: ComponentType<StaticRenderProps<K>>) => Promise<string>
 
 export type Compilation = compilationNS.Compilation
 export type JSONWebpackStats = Stats.ToJsonOptionsObject
