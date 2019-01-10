@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/hungry-consulting/webpack-render-static-page-plugin
+	branch = master
+	commit = 674063b6708d7afaa6935f6f4b17fe64f59aeb52
+	method = merge
+	cmdver = 0.4.0
+	parent = 343e71bec372105d1381a73e84b72a0500a8bb88
